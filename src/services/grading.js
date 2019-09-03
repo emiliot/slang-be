@@ -1,12 +1,41 @@
-import { GRADES, SPELLING_LEVELS } from "../constants/spelling";
+import { GRADES, SPELLING_LEVELS, WARNING_THRESHOLD } from "../constants/spelling";
 import words from '../spellingsData/words';
 
 export const gradeExercise = (text, userInput) => {
-  // TODO: make a more real grade
-  return {
+  let grade = {
     result: GRADES.APPROVED,
     diff: []
   }
+
+  text.split('').forEach((original, index) => {
+    if (original !== userInput[index]){
+      grade.diff.push({
+        original,
+        user: userInput[index],
+        index,
+      })
+    }
+  })
+
+  if (grade.diff.length > WARNING_THRESHOLD) {
+    grade.result = GRADES.REJECTED
+  } else if (grade.diff.length > 0) {
+    // check if the error is transposed characters
+    let transposed = true
+    for(let i=1; i < grade.diff.length; i++){
+      if (grade.diff[i].index - grade.diff[i-1].index > 1) {
+        transposed = false
+      }
+    }
+
+    if(transposed) {
+      grade.result = GRADES.WARNING
+    } else {
+      grade.result = GRADES.REJECTED
+    }
+  }
+
+  return grade
 }
 
 const getNextLevel = level => {
