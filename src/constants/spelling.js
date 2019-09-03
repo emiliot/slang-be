@@ -3,3 +3,9 @@ export const SPELLING_LEVELS = {
   MEDIUM: 'medium',
   HARD: 'hard'
 }
+
+export const GRADES = {
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+  WARNING: 'warning',
+}
